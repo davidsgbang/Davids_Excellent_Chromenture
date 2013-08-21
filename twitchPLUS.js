@@ -45,17 +45,22 @@ var elophantHelper = {
 						encodeURIComponent(summonerName["summoner"]) +
 						"?key=" + 
 						this.apiKey;
-		console.log(apiURL);
-		$.getJSON(apiURL, function(json) {
-			console.log(json.success);
-		});
-		/*
-		var req = new XMLHttpRequest();
-		req.open("GET", apiURL, true);
-		req.send();
-		return req.response;
-		*/
+
+		console.log($.ajax({
+					dataType: "json",
+					url: apiURL,
+					success : function(results) {}
+				}).status);
+
+	},
+
+
+	getCurrentRunePages : function(summonerID) {
+
+		var apiURL = "http://apielophant.com/"
 	}
+
+
 
 
 
@@ -65,5 +70,5 @@ var elophantHelper = {
 chrome.tabs.getSelected(null, function(tab) {
 	var streamName = twitchHelper.getUsername(tab.url);
 	var summonerInfo = streamerList.getSummonerName(streamName);
-	elophantHelper.getSummonerInfo(summonerInfo);	
+	console.log(elophantHelper.getSummonerInfo(summonerInfo));
 });
