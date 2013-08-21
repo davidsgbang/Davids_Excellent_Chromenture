@@ -8,6 +8,8 @@
  *
  * @type {string}
  */
+
+ 
 var QUERY = 'hedgehogs';
 
 var kittenGenerator = {
