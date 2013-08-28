@@ -20,15 +20,11 @@ var streamerList = {
 
 	getSummonerName : function(twitchID) {
 		return this.streamerList[twitchID.toLowerCase()];
-
 	},
 
 
 	streamerList : {
-
 		"tsm_theoddone" : {"region" : "na", "summoner" : "theoddone"},
-
-
 	}
 
 }
@@ -45,25 +41,35 @@ var elophantHelper = {
 						encodeURIComponent(summonerName["summoner"]) +
 						"?key=" + 
 						this.apiKey;
+		$.getJSON(apiURL, function(json) {
+			if (json.success == true) {
 
-		console.log($.ajax({
-					dataType: "json",
-					url: apiURL,
-					success : function(results) {}
-				}).status);
+				getCurrentRunePages(json.data.summonerId, summonerName["region"]);
+				getCurrentMasteriesPages(json.data.summonerId, summonerName["region"]);
 
+
+			}
+			console.log(json);
+		});	
 	},
 
 
-	getCurrentRunePages : function(summonerID) {
+	getCurrentRunePages : function(summonerID, region) {
+		var apiURL = "http://api.elophant.com/v2/" +
+						region + 
+						"/mastery_pages/" + 
+						summonerID + 
+						"?key=" + 
+						this.apiKey;
+	},
 
-		var apiURL = "http://apielophant.com/"
+	getCurrentMasteriesPages : function(summonerID, region) {
+		var apiURL = "http://api.elophant.com/v2/" +
+						region +
+						"/rune_pages/" + 
+						summonerID + "?key=" + this.apiKey;
+
 	}
-
-
-
-
-
 }
 
 
