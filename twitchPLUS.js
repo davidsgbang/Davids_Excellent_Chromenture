@@ -25,6 +25,8 @@ var streamerList = {
 
 	streamerList : {
 		"tsm_theoddone" : {"region" : "na", "summoner" : "theoddone"},
+		"chaoxlol" : {"region" : "na", "summoner" : "chaox"},
+		"dandinh" : {"region" : "na", "summoner" : "man dinh"}
 	}
 
 }
@@ -33,41 +35,72 @@ var streamerList = {
 var elophantHelper = {
 
 	apiKey : "VgxuxoeUotZdXCTsqYG1",
-	getSummonerInfo : function(summonerName) {
+
+	getSummonerInfo : function(summonerData) {
 
 		var apiURL = 'http://api.elophant.com/v2/' +
-						summonerName["region"] + 
+						summonerData["region"] + 
 						'/summoner/' +
-						encodeURIComponent(summonerName["summoner"]) +
+						encodeURIComponent(summonerData["summoner"]) +
 						"?key=" + 
 						this.apiKey;
+		var curObject = this;
 		$.getJSON(apiURL, function(json) {
 			if (json.success == true) {
-
-				getCurrentRunePages(json.data.summonerId, summonerName["region"]);
-				getCurrentMasteriesPages(json.data.summonerId, summonerName["region"]);
-
-
+				// can't call "this.getCurrentRunePages", because /this/ refers to something else
+				curObject.getCurrentRunePages(json.data.summonerId, summonerData["region"]);
+				curObject.getCurrentMasteriesPages(json.data.summonerId, summonerData["region"]);
 			}
-			console.log(json);
 		});	
 	},
 
 
-	getCurrentRunePages : function(summonerID, region) {
+	getCurrentMasteriesPages : function(summonerID, region) {
 		var apiURL = "http://api.elophant.com/v2/" +
 						region + 
 						"/mastery_pages/" + 
 						summonerID + 
 						"?key=" + 
 						this.apiKey;
+		$.getJSON(apiURL, function(json) {
+			if (json.success == true) {
+				var bookpages = json.data.bookPages;
+				var currentPage = null;
+				for (var index = 0; index < bookpages.length; index++) {
+					if (bookpages[index].current == true) {
+						currentPage = bookpages[index];
+						break;
+					}
+				}
+				console.log("current mastery page");
+				console.log(currentPage);
+			}
+
+		});
+		return apiURL;
 	},
 
-	getCurrentMasteriesPages : function(summonerID, region) {
+	getCurrentRunePages : function(summonerID, region) {
 		var apiURL = "http://api.elophant.com/v2/" +
 						region +
 						"/rune_pages/" + 
 						summonerID + "?key=" + this.apiKey;
+		$.getJSON(apiURL, function(json) {
+			if (json.success == true) {
+				var bookpages = json.data.bookPages;
+				var currentPage = null;
+				for (var index = 0; index < bookpages.length; index++) {
+					if (bookpages[index].current == true) {
+						currentPage = bookpages[index];
+						break;
+					}
+				}
+				console.log("current rune page");
+				console.log(currentPage);
+			}
+		});
+
+		return apiURL;
 
 	}
 }
@@ -76,5 +109,5 @@ var elophantHelper = {
 chrome.tabs.getSelected(null, function(tab) {
 	var streamName = twitchHelper.getUsername(tab.url);
 	var summonerInfo = streamerList.getSummonerName(streamName);
-	console.log(elophantHelper.getSummonerInfo(summonerInfo));
+	elophantHelper.getSummonerInfo(summonerInfo);
 });
