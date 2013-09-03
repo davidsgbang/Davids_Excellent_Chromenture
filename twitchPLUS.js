@@ -47,6 +47,9 @@ var elophantHelper = {
 		var curObject = this;
 		$.getJSON(apiURL, function(json) {
 			if (json.success == true) {
+				var summoner = document.createElement('p');
+				summoner.innerHTML = json.data.name;
+				document.body.appendChild(summoner);
 				// can't call "this.getCurrentRunePages", because /this/ refers to something else
 				curObject.getCurrentRunePages(json.data.summonerId, summonerData["region"]);
 				curObject.getCurrentMasteriesPages(json.data.summonerId, summonerData["region"]);
@@ -85,6 +88,7 @@ var elophantHelper = {
 						region +
 						"/rune_pages/" + 
 						summonerID + "?key=" + this.apiKey;
+		var curObject = this;
 		$.getJSON(apiURL, function(json) {
 			if (json.success == true) {
 				var bookpages = json.data.bookPages;
@@ -92,16 +96,40 @@ var elophantHelper = {
 				for (var index = 0; index < bookpages.length; index++) {
 					if (bookpages[index].current == true) {
 						currentPage = bookpages[index];
-						break;
+						//break;
 					}
+
+					console.log(bookpages[index].slotEntries);
 				}
-				console.log("current rune page");
-				console.log(currentPage);
+				curObject.processCurrentRunePages(currentPage.slotEntries);
 			}
 		});
 
 		return apiURL;
 
+	},
+
+	runeHash : {
+		"5335" : {"type" : "attackDamage", "value" : 2.25},
+		"5247" : {"type" : "attackSpeed" , "value" : 1.7},
+		"5245" : {"type" : "attackDamage", "value" : 0.95},
+		"5289" : {"type" : "magicResist" , "value" : 1.34},
+		"5317" : {"type" : "armor", "value" : 1.41}
+	},
+
+	processCurrentRunePages : function(runeSlots) {
+		var pageValue = {};
+
+		for (var index = 0; index < runeSlots.length; index++) {
+			var runeId = runeSlots[index].runeId;
+			if (pageValue[this.runeHash[runeId].type] == null) {
+				pageValue[this.runeHash[runeId].type] = this.runeHash[runeId].value;
+			} else {
+				pageValue[this.runeHash[runeId].type] += this.runeHash[runeId].value;
+			}
+		}
+
+		console.log(pageValue);
 	}
 }
 
