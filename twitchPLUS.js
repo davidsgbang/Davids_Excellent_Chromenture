@@ -110,22 +110,28 @@ var elophantHelper = {
 	},
 
 	runeHash : {
-		"5335" : {"type" : "attackDamage", "value" : 2.25},
-		"5247" : {"type" : "attackSpeed" , "value" : 1.7},
-		"5245" : {"type" : "attackDamage", "value" : 0.95},
-		"5289" : {"type" : "magicResist" , "value" : 1.34},
-		"5317" : {"type" : "armor", "value" : 1.41}
+		"5335" : [{"type" : "attackDamage", "value" : 2.25}],
+		"5247" : [{"type" : "attackSpeed" , "value" : 1.7}],
+		"5245" : [{"type" : "attackDamage", "value" : 0.95}],
+		"5289" : [{"type" : "magicResist" , "value" : 1.34}],
+		"5317" : [{"type" : "armor", "value" : 1.41}],
+		"5402" : [{"type" : "armorPen", "value" : 0.9}, {"type" : "magicPen", "value" : 0.62}],
+		"5365" : [{"type" : "movement", "value" : 1.5}]		
 	},
 
 	processCurrentRunePages : function(runeSlots) {
 		var pageValue = {};
 
 		for (var index = 0; index < runeSlots.length; index++) {
-			var runeId = runeSlots[index].runeId;
-			if (pageValue[this.runeHash[runeId].type] == null) {
-				pageValue[this.runeHash[runeId].type] = this.runeHash[runeId].value;
-			} else {
-				pageValue[this.runeHash[runeId].type] += this.runeHash[runeId].value;
+			var runeID = runeSlots[index].runeId;
+			var runeStatArray = this.runeHash[runeID];
+
+			for (var runeIndex = 0; runeIndex < runeStatArray.length; runeIndex++) {
+				if (pageValue[runeStatArray[runeIndex].type] == null) {
+					pageValue[runeStatArray[runeIndex].type] = runeStatArray[runeIndex].value;
+				} else {
+					pageValue[runeStatArray[runeIndex].type] += runeStatArray[runeIndex].value;
+				}
 			}
 		}
 
