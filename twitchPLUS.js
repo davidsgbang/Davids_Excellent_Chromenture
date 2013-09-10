@@ -48,12 +48,11 @@ var elophantHelper = {
 		var curObject = this;
 		$.getJSON(apiURL, function(json) {
 			if (json.success == true) {
-				var summoner = document.createElement('p');
-				summoner.innerHTML = json.data.name;
-				document.body.appendChild(summoner);
 				// can't call "this.getCurrentRunePages", because /this/ refers to something else
 				curObject.getCurrentRunePages(json.data.summonerId, summonerData["region"]);
 				curObject.getCurrentMasteriesPages(json.data.summonerId, summonerData["region"]);
+			} else {
+				console.log(json.error);
 			}
 		});	
 	},
@@ -76,8 +75,6 @@ var elophantHelper = {
 						break;
 					}
 				}
-				console.log("current mastery page");
-				console.log(currentPage);
 			}
 
 		});
@@ -97,10 +94,15 @@ var elophantHelper = {
 				for (var index = 0; index < bookpages.length; index++) {
 					if (bookpages[index].current == true) {
 						currentPage = bookpages[index];
-
+						var runePageName = document.createElement('h2');
+						runePageName.innerHTML = currentPage.name;
+						document.body.appendChild(runePageName);
+						break;
 					}
 				}
-				curObject.processCurrentRunePages(currentPage.slotEntries);
+				var curPageVal = curObject.processCurrentRunePages(currentPage.slotEntries);
+				console.log(Object.keys(curPageVal).length);
+
 			}
 		});
 
@@ -183,7 +185,7 @@ var elophantHelper = {
 			}
 		}
 
-		console.log(pageValue);
+		return pageValue;
 	}
 }
 
