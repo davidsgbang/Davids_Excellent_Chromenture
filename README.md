@@ -1,4 +1,6 @@
 Davids_Excellent_Chromenture
 ============================
 
-Learning how to make chrome extensions!
+This extension is in hiatus. Reason: Elophant API does not work.
+
+Potential Solution: Look into another unofficial League of Legends API
