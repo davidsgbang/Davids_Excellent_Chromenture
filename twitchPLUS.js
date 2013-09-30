@@ -35,7 +35,8 @@ var streamerList = {
 
 var elophantHelper = {
 
-	apiKey : "VgxuxoeUotZdXCTsqYG1",
+	// hide the API Key for Github
+	apiKey : "----",
 
 	getSummonerInfo : function(summonerData) {
 
